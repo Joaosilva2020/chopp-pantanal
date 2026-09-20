@@ -1,4 +1,4 @@
-const WHATSAPP_NUMBER = "5565993307137";
+const WHATSAPP_NUMBER = "556598091999";
 
 const form = document.querySelector("#budgetForm");
 const quantityInput = document.querySelector("#quantity");
