@@ -28,7 +28,6 @@
       </nav>
 
       <a class="header-whatsapp" href="https://wa.me/5565993307137" target="_blank" rel="noopener">
-        <span aria-hidden="true">☎</span>
         Fale Conosco
       </a>
     </header>
@@ -57,23 +56,22 @@
           <p>Escolha as opcoes e envie o pedido completo direto pelo WhatsApp.</p>
         </div>
 
-        <form class="budget-grid" id="budgetForm">
+        <form class="budget-grid" id="budgetForm" novalidate>
           <div class="steps">
+            <section class="form-step is-active" data-step="1" aria-label="Etapa de orcamento">
             <fieldset class="panel">
               <legend><span>1.</span> Escolha o tipo de servico</legend>
               <div class="option-grid">
                 <label class="choice">
-                  <input type="radio" name="service" value="Apenas barril" data-price-extra="0" />
+                  <input type="radio" name="service" value="Apenas barril" data-price-extra="0" required />
                   <span class="check"></span>
-                  <span class="choice-icon" aria-hidden="true">▤</span>
                   <strong>Apenas barril</strong>
                   <small>Para quem ja tem chopeira e quer apenas o barril.</small>
                 </label>
 
                 <label class="choice">
-                  <input type="radio" name="service" value="Pacote completo" data-price-extra="0" checked />
+                  <input type="radio" name="service" value="Pacote completo" data-price-extra="0" required />
                   <span class="check"></span>
-                  <span class="choice-icon" aria-hidden="true">♨</span>
                   <strong>Pacote completo</strong>
                   <small>Chopp com chopeira, cilindro, acessorios e delivery.</small>
                 </label>
@@ -84,21 +82,19 @@
               <legend><span>2.</span> Escolha o tamanho do barril</legend>
               <div class="option-grid">
                 <label class="choice">
-                  <input type="radio" name="keg" value="50L" data-cups="150" data-price="750" checked />
+                  <input type="radio" name="keg" value="50L" data-cups="166" data-price="750" required />
                   <span class="check"></span>
-                  <span class="keg-icon" aria-hidden="true"></span>
                   <strong>50L</strong>
                   <small>Rende em media 166 copos de 300ml.</small>
                   <em>R$ 750,00</em>
                 </label>
 
                 <label class="choice">
-                  <input type="radio" name="keg" value="30L" data-cups="90" data-price="0" />
+                  <input type="radio" name="keg" value="30L" data-cups="100" data-price="470" required />
                   <span class="check"></span>
-                  <span class="keg-icon" aria-hidden="true"></span>
                   <strong>30L</strong>
-                  <small>Rende em media 90 copos de 300ml.</small>
-                  <em>470</em>
+                  <small>Rende em media 100 copos de 300ml.</small>
+                  <em>R$ 470,00</em>
                 </label>
               </div>
             </fieldset>
@@ -110,97 +106,127 @@
                 <input id="quantity" name="quantity" type="number" min="1" max="20" value="1" inputmode="numeric" />
                 <button type="button" id="increaseQty" aria-label="Aumentar quantidade">+</button>
               </div>
-              <p class="notice">Vendemos barris de 50L e 30L. O pacote completo de 50L sai por R$ 750,00.</p>
+              <p class="notice">Vendemos barris de 50L por R$ 750,00 e 30L por R$ 470,00.</p>
             </fieldset>
 
-            <fieldset class="panel compact-panel">
-              <legend><span>4.</span> Energia do local</legend>
-              <div class="segmented">
+            <div class="step-actions">
+              <p class="form-error" id="budgetError" role="alert"></p>
+              <button class="next-button" type="button" id="goToCustomerData">Continuar para cadastro</button>
+            </div>
+            </section>
+
+            <section class="form-step" data-step="2" aria-label="Etapa de cadastro">
+              <section class="panel customer-panel">
+                <h2>4. Seus dados</h2>
+
                 <label>
-                  <input type="radio" name="voltage" value="127V" checked />
-                  <span>127V</span>
+                  Nome completo
+                  <input id="name" name="name" type="text" placeholder="Digite seu nome completo" autocomplete="name" required />
                 </label>
+
                 <label>
-                  <input type="radio" name="voltage" value="220V" />
-                  <span>220V</span>
+                  CPF ou CNPJ
+                  <input
+                    id="document"
+                    name="document"
+                    type="text"
+                    placeholder="CPF: 123.231.145-20 ou CNPJ: 12.345.678/0001-90"
+                    autocomplete="off"
+                    required
+                    maxlength="18"
+                  />
+                  <small class="field-help">CPF possui 11 digitos numericos. CNPJ possui 14 digitos numericos.</small>
                 </label>
-              </div>
-            </fieldset>
+
+                <label>
+                  WhatsApp
+                  <input id="phone" name="phone" type="tel" placeholder="(65) 9 9999-9999" autocomplete="tel" required />
+                </label>
+
+                <label>
+                  Endereco de entrega
+                  <input id="address" name="address" type="text" placeholder="Rua, numero, bairro e cidade" autocomplete="street-address" required />
+                </label>
+
+                <div class="two-columns">
+                  <label>
+                    Data da entrega
+                    <input id="date" name="date" type="date" required />
+                  </label>
+
+                  <label>
+                    Hora da entrega
+                    <input id="time" name="time" type="time" required />
+                  </label>
+                </div>
+
+                <fieldset class="voltage-field">
+                  <legend>Voltagem do local de instalacao</legend>
+                  <div class="segmented">
+                    <label>
+                      <input type="radio" name="voltage" value="127V" required />
+                      <span>127V</span>
+                    </label>
+                    <label>
+                      <input type="radio" name="voltage" value="220V" required />
+                      <span>220V</span>
+                    </label>
+                  </div>
+                </fieldset>
+
+                <label>
+                  Observacoes
+                  <textarea id="notes" name="notes" rows="3" placeholder=""></textarea>
+                </label>
+
+                <div class="step-actions split-actions">
+                  <button class="back-button" type="button" id="backToBudget">Voltar</button>
+                  <button class="submit-button" type="submit">
+                    Receber orcamento no WhatsApp
+                  </button>
+                </div>
+
+                <p class="privacy">Seus dados serao usados apenas para montar o atendimento.</p>
+              </section>
+            </section>
           </div>
 
           <aside class="sidebar">
-            <section class="panel summary" aria-live="polite">
+            <section class="panel summary is-empty" id="budgetSummary" aria-live="polite">
               <h2>Resumo do seu orcamento</h2>
+              <p class="summary-empty" id="summaryEmpty">Selecione o servico e o barril para ver o valor.</p>
               <dl>
                 <div>
+                  <dt>Produto</dt>
+                  <dd id="summaryProduct">Cerveja Pantanal</dd>
+                </div>
+                <div>
                   <dt>Tipo de servico</dt>
-                  <dd id="summaryService">Pacote completo</dd>
+                  <dd id="summaryService">-</dd>
                 </div>
                 <div>
                   <dt>Barril selecionado</dt>
-                  <dd id="summaryKeg">50L</dd>
+                  <dd id="summaryKeg">-</dd>
                 </div>
                 <div>
                   <dt>Quantidade</dt>
-                  <dd id="summaryQty">1 barril</dd>
+                  <dd id="summaryQty">-</dd>
+                </div>
+                <div>
+                  <dt>Volume total</dt>
+                  <dd id="summaryLiters">-</dd>
                 </div>
                 <div>
                   <dt>Energia</dt>
-                  <dd id="summaryVoltage">127V</dd>
+                  <dd id="summaryVoltage">Obrigatorio no cadastro</dd>
                 </div>
                 <div>
                   <dt>Total estimado</dt>
-                  <dd id="summaryTotal">R$ 750,00</dd>
+                  <dd id="summaryTotal">-</dd>
                 </div>
               </dl>
             </section>
 
-            <section class="panel customer-panel">
-              <h2>5. Seus dados</h2>
-
-              <label>
-                Nome completo
-                <input id="name" name="name" type="text" placeholder="Digite seu nome completo" autocomplete="name" required />
-              </label>
-
-              <label>
-                CPF ou CNPJ
-                <input id="document" name="document" type="text" placeholder="CPF ou CNPJ" autocomplete="off" required />
-              </label>
-
-              <label>
-                WhatsApp
-                <input id="phone" name="phone" type="tel" placeholder="(65) 9 9999-9999" autocomplete="tel" required />
-              </label>
-
-              <label>
-                Endereco de entrega
-                <input id="address" name="address" type="text" placeholder="Rua, numero, bairro e cidade" autocomplete="street-address" required />
-              </label>
-
-              <div class="two-columns">
-                <label>
-                  Data da entrega
-                  <input id="date" name="date" type="date" required />
-                </label>
-
-                <label>
-                  Hora da entrega
-                  <input id="time" name="time" type="time" required />
-                </label>
-              </div>
-
-              <label>
-                Observacoes
-                <textarea id="notes" name="notes" rows="3" placeholder=""></textarea>
-              </label>
-
-              <button class="submit-button" type="submit">
-                Receber orcamento no WhatsApp
-              </button>
-
-              <p class="privacy">Seus dados serao usados apenas para montar o atendimento.</p>
-            </section>
           </aside>
         </form>
       </section>

@@ -25,6 +25,7 @@ body {
   color: var(--ink);
   font-family: "Inter", Arial, sans-serif;
   background: #ffffff;
+  overflow-x: hidden;
 }
 
 a {
@@ -211,7 +212,7 @@ textarea {
 
 .budget-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.03fr) minmax(320px, 0.97fr);
+  grid-template-columns: minmax(0, 1.08fr) minmax(320px, 0.92fr);
   gap: 28px;
   width: min(1100px, 100%);
   margin: 0 auto;
@@ -224,6 +225,16 @@ textarea {
   gap: 18px;
 }
 
+.form-step {
+  display: none;
+  align-content: start;
+  gap: 18px;
+}
+
+.form-step.is-active {
+  display: grid;
+}
+
 .panel {
   margin: 0;
   padding: clamp(18px, 3vw, 24px);
@@ -231,6 +242,11 @@ textarea {
   border-radius: var(--radius);
   background: rgba(255, 255, 255, 0.95);
   box-shadow: var(--shadow);
+}
+
+.sidebar {
+  position: sticky;
+  top: 110px;
 }
 
 fieldset.panel {
@@ -263,13 +279,14 @@ fieldset.panel {
   display: grid;
   justify-items: center;
   gap: 10px;
-  min-height: 178px;
-  padding: 22px 16px 18px;
+  min-height: 148px;
+  padding: 32px 16px 18px;
   border: 1px solid #d8d8dd;
   border-radius: var(--radius);
   background: #fff;
   text-align: center;
   cursor: pointer;
+  user-select: none;
   transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
 }
 
@@ -321,41 +338,6 @@ fieldset.panel {
   transform: rotate(45deg);
 }
 
-.choice-icon {
-  display: grid;
-  place-items: center;
-  width: 54px;
-  height: 54px;
-  color: var(--red);
-  font-size: 2.4rem;
-}
-
-.keg-icon {
-  position: relative;
-  width: 58px;
-  height: 66px;
-  border: 3px solid var(--ink);
-  border-radius: 48% / 14%;
-}
-
-.keg-icon::before,
-.keg-icon::after {
-  content: "";
-  position: absolute;
-  left: 7px;
-  right: 7px;
-  height: 2px;
-  background: var(--ink);
-}
-
-.keg-icon::before {
-  top: 17px;
-}
-
-.keg-icon::after {
-  bottom: 17px;
-}
-
 .choice strong {
   font-size: 1.1rem;
   text-transform: uppercase;
@@ -380,7 +362,7 @@ fieldset.panel {
 
 .quantity-control {
   display: grid;
-  grid-template-columns: 52px 76px 52px;
+  grid-template-columns: 58px 92px 58px;
   width: max-content;
   overflow: hidden;
   border: 1px solid var(--line);
@@ -391,7 +373,7 @@ fieldset.panel {
 .quantity-control button,
 .quantity-control input {
   width: 100%;
-  height: 46px;
+  height: 52px;
   border: 0;
   background: #fff;
   text-align: center;
@@ -465,9 +447,44 @@ fieldset.panel {
   background: var(--red);
 }
 
+.voltage-field {
+  display: grid;
+  gap: 9px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.voltage-field legend {
+  margin: 0;
+  padding: 0;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
 .summary dl {
   display: grid;
   margin: 0;
+}
+
+.summary-empty {
+  display: none;
+  margin: 0;
+  padding: 14px;
+  border: 1px dashed #d6d6dc;
+  border-radius: var(--radius);
+  color: var(--muted);
+  background: #fafafa;
+  line-height: 1.45;
+}
+
+.summary.is-empty .summary-empty {
+  display: block;
+}
+
+.summary.is-empty dl {
+  display: none;
 }
 
 .summary dl div {
@@ -498,6 +515,10 @@ fieldset.panel {
   font-weight: 900;
 }
 
+.summary dl div:last-child dd {
+  font-size: 1.35rem;
+}
+
 .customer-panel {
   display: grid;
   gap: 13px;
@@ -510,17 +531,30 @@ fieldset.panel {
   font-weight: 800;
 }
 
+.field-help {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
 .customer-panel input,
 .customer-panel textarea {
   width: 100%;
-  min-height: 43px;
-  padding: 10px 12px;
+  min-height: 50px;
+  padding: 12px 13px;
   border: 1px solid #d9d9de;
   border-radius: 6px;
   outline: 0;
   background: #fff;
   color: var(--ink);
   font-weight: 500;
+}
+
+.customer-panel input[type="date"],
+.customer-panel input[type="time"] {
+  color-scheme: light;
+  cursor: pointer;
 }
 
 .customer-panel textarea {
@@ -539,16 +573,58 @@ fieldset.panel {
   gap: 12px;
 }
 
-.submit-button {
-  width: 100%;
-  margin-top: 2px;
-  padding: 0 18px;
-  background: var(--green);
-  text-transform: uppercase;
+.step-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
 }
 
+.form-error {
+  flex: 1;
+  min-height: 20px;
+  margin: 0;
+  color: var(--red);
+  font-size: 0.92rem;
+  font-weight: 800;
+}
+
+.split-actions {
+  display: grid;
+  grid-template-columns: 130px minmax(0, 1fr);
+}
+
+.next-button,
+.back-button,
+.submit-button {
+  margin-top: 2px;
+  padding: 0 18px;
+  min-height: 50px;
+  border: 0;
+  border-radius: var(--radius);
+  font-weight: 900;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.next-button,
+.submit-button {
+  color: #fff;
+  background: var(--green);
+}
+
+.next-button:hover,
 .submit-button:hover {
   background: var(--green-dark);
+}
+
+.back-button {
+  color: var(--ink);
+  background: #f0f0f2;
+}
+
+.back-button:hover {
+  background: #e2e2e6;
 }
 
 .privacy {
@@ -649,6 +725,10 @@ fieldset.panel {
     grid-template-columns: 1fr;
   }
 
+  .sidebar {
+    position: static;
+  }
+
   .benefit-grid,
   .site-footer {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -665,13 +745,33 @@ fieldset.panel {
     font-size: 1.85rem;
   }
 
+  .main-nav {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 14px 20px;
+    overflow: visible;
+    font-size: 0.92rem;
+  }
+
+  .main-nav a {
+    padding-block: 4px;
+  }
+
   .header-whatsapp {
     width: 100%;
   }
 
   .hero {
-    min-height: 500px;
+    min-height: 430px;
     background-position: 58% top;
+  }
+
+  .budget-section {
+    padding-inline: 14px;
+  }
+
+  .panel {
+    padding: 16px;
   }
 
   .option-grid,
@@ -682,7 +782,8 @@ fieldset.panel {
   }
 
   .segmented,
-  .quantity-control {
+  .quantity-control,
+  .step-actions {
     width: 100%;
   }
 
@@ -692,6 +793,25 @@ fieldset.panel {
 
   .quantity-control {
     grid-template-columns: 1fr 1.25fr 1fr;
+  }
+
+  .step-actions,
+  .split-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .form-error {
+    order: 2;
+    text-align: center;
+  }
+
+  .next-button {
+    order: 1;
+  }
+
+  .summary dl div {
+    grid-template-columns: 1fr;
   }
 
   .site-footer div {
