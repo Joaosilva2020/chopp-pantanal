@@ -6,19 +6,29 @@ const decreaseButton = document.querySelector("#decreaseQty");
 const increaseButton = document.querySelector("#increaseQty");
 const goToCustomerDataButton = document.querySelector("#goToCustomerData");
 const backToBudgetButton = document.querySelector("#backToBudget");
+const submitButton = document.querySelector(".submit-button");
 const documentInput = document.querySelector("#document");
 const phoneInput = document.querySelector("#phone");
 const dateInput = document.querySelector("#date");
-const timeInput = document.querySelector("#time");
 const steps = document.querySelectorAll(".form-step");
 const budgetError = document.querySelector("#budgetError");
+const kegPanel = document.querySelector("#barris");
+const progress = document.querySelector(".progress");
 
 const budgetSummary = document.querySelector("#budgetSummary");
 const summaryKeg = document.querySelector("#summaryKeg");
 const summaryQty = document.querySelector("#summaryQty");
 const summaryLiters = document.querySelector("#summaryLiters");
+const summaryCups = document.querySelector("#summaryCups");
 const summaryVoltage = document.querySelector("#summaryVoltage");
 const summaryTotal = document.querySelector("#summaryTotal");
+
+const barLabel = document.querySelector("#barLabel");
+const barTotal = document.querySelector("#barTotal");
+const barAction = document.querySelector("#barAction");
+
+const menuToggle = document.querySelector("#menuToggle");
+const mainNav = document.querySelector("#mainNav");
 
 const moneyFormatter = new Intl.NumberFormat("pt-BR", {
   style: "currency",
@@ -49,8 +59,8 @@ function getBudget() {
 
   if (!keg) {
     return {
-      keg: keg?.value || "",
-      cups: keg?.dataset.cups || "",
+      keg: "",
+      cups: 0,
       voltage: voltage?.value || "",
       quantity,
       kegLiters: 0,
@@ -65,7 +75,7 @@ function getBudget() {
 
   return {
     keg: keg.value,
-    cups: keg.dataset.cups,
+    cups: Number(keg.dataset.cups),
     voltage: voltage?.value || "",
     quantity,
     kegLiters,
@@ -75,12 +85,19 @@ function getBudget() {
   };
 }
 
+function currentStep() {
+  return form.dataset.step;
+}
+
 function setStep(stepNumber) {
+  form.dataset.step = String(stepNumber);
+
   steps.forEach((step) => {
     step.classList.toggle("is-active", step.dataset.step === String(stepNumber));
   });
 
-  document.querySelector("#orcamento").scrollIntoView({ behavior: "smooth", block: "start" });
+  barAction.textContent = stepNumber === 1 ? "Continuar" : "Enviar no WhatsApp";
+  progress.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 function formatCpfCnpj(value) {
@@ -129,7 +146,7 @@ function validateCustomerFields() {
   documentInput.setCustomValidity(
     isValidCpfOrCnpj(documentInput.value)
       ? ""
-      : "Digite um CPF com 11 digitos ou CNPJ com 14 digitos."
+      : "Digite um CPF com 11 dígitos ou CNPJ com 14 dígitos."
   );
 }
 
@@ -145,8 +162,19 @@ function updateSummary() {
   summaryLiters.textContent = budget.isComplete
     ? `${budget.quantity * budget.kegLiters} litros`
     : "-";
-  summaryVoltage.textContent = budget.voltage || "Obrigatorio no cadastro";
+  summaryCups.textContent = budget.isComplete
+    ? `≈ ${budget.quantity * budget.cups} copos`
+    : "-";
+  summaryVoltage.textContent = budget.voltage || "Informe no cadastro";
   summaryTotal.textContent = budget.isComplete ? moneyFormatter.format(budget.total) : "-";
+
+  if (budget.isComplete) {
+    barLabel.textContent = `${budget.quantity} × ${budget.keg} · total estimado`;
+    barTotal.textContent = moneyFormatter.format(budget.total);
+  } else {
+    barLabel.textContent = "Total estimado";
+    barTotal.textContent = "Escolha um barril";
+  }
 }
 
 function setBudgetError(message) {
@@ -154,9 +182,7 @@ function setBudgetError(message) {
 }
 
 function validateBudgetStep() {
-  const keg = selected("keg");
-
-  if (!keg) {
+  if (!selected("keg")) {
     setBudgetError("Escolha o tamanho do barril para continuar.");
     return false;
   }
@@ -201,17 +227,31 @@ function buildWhatsAppMessage() {
     .join("\n");
 }
 
+function tryGoToStepTwo() {
+  updateSummary();
+
+  if (validateBudgetStep()) {
+    setStep(2);
+    return;
+  }
+
+  kegPanel.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
 decreaseButton.addEventListener("click", () => changeQuantity(-1));
 increaseButton.addEventListener("click", () => changeQuantity(1));
 
-goToCustomerDataButton.addEventListener("click", () => {
-  updateSummary();
-  if (validateBudgetStep()) {
-    setStep(2);
+goToCustomerDataButton.addEventListener("click", tryGoToStepTwo);
+backToBudgetButton.addEventListener("click", () => setStep(1));
+
+// Barra fixa do celular: continua na etapa 1, envia na etapa 2
+barAction.addEventListener("click", () => {
+  if (currentStep() === "1") {
+    tryGoToStepTwo();
+  } else {
+    submitButton.click();
   }
 });
-
-backToBudgetButton.addEventListener("click", () => setStep(1));
 
 documentInput.addEventListener("input", () => {
   documentInput.value = formatCpfCnpj(documentInput.value);
@@ -242,13 +282,38 @@ form.addEventListener("submit", (event) => {
   }
 
   if (!form.checkValidity()) {
-    setStep(2);
+    if (currentStep() !== "2") setStep(2);
     form.reportValidity();
     return;
   }
 
-  const message = encodeURIComponent(buildWhatsAppMessage());
-  window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, "_blank", "noopener");
+  const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(buildWhatsAppMessage())}`;
+  const popup = window.open(url, "_blank");
+
+  if (popup) {
+    popup.opener = null;
+  } else {
+    window.location.href = url;
+  }
+});
+
+// Menu do celular
+function setMenu(open) {
+  mainNav.classList.toggle("is-open", open);
+  menuToggle.setAttribute("aria-expanded", String(open));
+  menuToggle.setAttribute("aria-label", open ? "Fechar menu" : "Abrir menu");
+}
+
+menuToggle.addEventListener("click", () => {
+  setMenu(!mainNav.classList.contains("is-open"));
+});
+
+mainNav.addEventListener("click", (event) => {
+  if (event.target.closest("a")) setMenu(false);
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") setMenu(false);
 });
 
 const today = new Date();
