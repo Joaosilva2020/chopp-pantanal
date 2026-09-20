@@ -35,7 +35,7 @@
     <main>
       <section class="hero" id="inicio">
         <div class="hero-content">
-          <p class="eyebrow">Aluguel de chopeira com barril de chopp</p>
+          
           <h1>O melhor chopp <span>para sua festa!</span></h1>
           <p>
             Delivery com chopeira, barril, cilindro de CO2 e acessorios para eventos,
@@ -59,27 +59,8 @@
         <form class="budget-grid" id="budgetForm" novalidate>
           <div class="steps">
             <section class="form-step is-active" data-step="1" aria-label="Etapa de orcamento">
-            <fieldset class="panel">
-              <legend><span>1.</span> Escolha o tipo de servico</legend>
-              <div class="option-grid">
-                <label class="choice">
-                  <input type="radio" name="service" value="Apenas barril" data-price-extra="0" required />
-                  <span class="check"></span>
-                  <strong>Apenas barril</strong>
-                  <small>Para quem ja tem chopeira e quer apenas o barril.</small>
-                </label>
-
-                <label class="choice">
-                  <input type="radio" name="service" value="Pacote completo" data-price-extra="0" required />
-                  <span class="check"></span>
-                  <strong>Pacote completo</strong>
-                  <small>Chopp com chopeira, cilindro, acessorios e delivery.</small>
-                </label>
-              </div>
-            </fieldset>
-
             <fieldset class="panel" id="barris">
-              <legend><span>2.</span> Escolha o tamanho do barril</legend>
+              <legend><span>1.</span> Escolha o barril</legend>
               <div class="option-grid">
                 <label class="choice">
                   <input type="radio" name="keg" value="50L" data-cups="166" data-price="750" required />
@@ -100,13 +81,13 @@
             </fieldset>
 
             <fieldset class="panel compact-panel">
-              <legend><span>3.</span> Quantidade de barris</legend>
+              <legend><span>2.</span> Quantidade de barris</legend>
               <div class="quantity-control">
                 <button type="button" id="decreaseQty" aria-label="Diminuir quantidade">−</button>
                 <input id="quantity" name="quantity" type="number" min="1" max="20" value="1" inputmode="numeric" />
                 <button type="button" id="increaseQty" aria-label="Aumentar quantidade">+</button>
               </div>
-              <p class="notice"></p>
+              <p class="notice">O valor total e calculado automaticamente conforme a quantidade.</p>
             </fieldset>
 
             <div class="step-actions">
@@ -117,7 +98,7 @@
 
             <section class="form-step" data-step="2" aria-label="Etapa de cadastro">
               <section class="panel customer-panel">
-                <h2>4. Seus dados</h2>
+                <h2>3. Seus dados</h2>
 
                 <label>
                   Nome completo
@@ -194,15 +175,11 @@
           <aside class="sidebar">
             <section class="panel summary is-empty" id="budgetSummary" aria-live="polite">
               <h2>Resumo do seu orcamento</h2>
-              <p class="summary-empty" id="summaryEmpty">Selecione o servico e o barril para ver o valor.</p>
+              <p class="summary-empty" id="summaryEmpty">Selecione o barril para ver o valor.</p>
               <dl>
                 <div>
                   <dt>Produto</dt>
                   <dd id="summaryProduct">Cerveja Pantanal</dd>
-                </div>
-                <div>
-                  <dt>Tipo de servico</dt>
-                  <dd id="summaryService">-</dd>
                 </div>
                 <div>
                   <dt>Barril selecionado</dt>

@@ -14,7 +14,6 @@ const steps = document.querySelectorAll(".form-step");
 const budgetError = document.querySelector("#budgetError");
 
 const budgetSummary = document.querySelector("#budgetSummary");
-const summaryService = document.querySelector("#summaryService");
 const summaryKeg = document.querySelector("#summaryKeg");
 const summaryQty = document.querySelector("#summaryQty");
 const summaryLiters = document.querySelector("#summaryLiters");
@@ -44,14 +43,12 @@ function getQuantity() {
 }
 
 function getBudget() {
-  const service = selected("service");
   const keg = selected("keg");
   const voltage = selected("voltage");
   const quantity = getQuantity();
 
-  if (!service || !keg) {
+  if (!keg) {
     return {
-      service: service?.value || "",
       keg: keg?.value || "",
       cups: keg?.dataset.cups || "",
       voltage: voltage?.value || "",
@@ -65,17 +62,15 @@ function getBudget() {
 
   const kegLiters = Number.parseInt(keg.value, 10);
   const unitPrice = Number(keg.dataset.price);
-  const serviceExtra = Number(service.dataset.priceExtra);
 
   return {
-    service: service.value,
     keg: keg.value,
     cups: keg.dataset.cups,
     voltage: voltage?.value || "",
     quantity,
     kegLiters,
     unitPrice,
-    total: (unitPrice + serviceExtra) * quantity,
+    total: unitPrice * quantity,
     isComplete: true,
   };
 }
@@ -143,7 +138,6 @@ function updateSummary() {
   quantityInput.value = budget.quantity;
 
   budgetSummary.classList.toggle("is-empty", !budget.isComplete);
-  summaryService.textContent = budget.service || "-";
   summaryKeg.textContent = budget.keg || "-";
   summaryQty.textContent = budget.isComplete
     ? `${budget.quantity} ${budget.quantity === 1 ? "barril" : "barris"}`
@@ -160,21 +154,10 @@ function setBudgetError(message) {
 }
 
 function validateBudgetStep() {
-  const service = selected("service");
   const keg = selected("keg");
 
-  if (!service && !keg) {
-    setBudgetError("Escolha o tipo de servico e o tamanho do barril.");
-    return false;
-  }
-
-  if (!service) {
-    setBudgetError("Escolha o tipo de servico.");
-    return false;
-  }
-
   if (!keg) {
-    setBudgetError("Escolha o tamanho do barril.");
+    setBudgetError("Escolha o tamanho do barril para continuar.");
     return false;
   }
 
@@ -197,7 +180,6 @@ function buildWhatsAppMessage() {
     "",
     "*Pedido*",
     "Produto: Cerveja Pantanal",
-    `Serviço: ${budget.service}`,
     `Barril: ${budget.keg}`,
     `Quantidade: ${budget.quantity} ${budget.quantity === 1 ? "barril" : "barris"}`,
     `Volume total: ${budget.quantity * budget.kegLiters} litros`,
