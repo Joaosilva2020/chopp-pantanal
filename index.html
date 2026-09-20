@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pantanal Chopp | Orcamento via WhatsApp</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#inicio" aria-label="Pantanal Chopp">
+        <span>Pantanal</span>
+        <small>chopp</small>
+      </a>
+
+      <nav class="main-nav" aria-label="Navegacao principal">
+        <a href="#inicio">Inicio</a>
+        <a href="#como-funciona">Como Funciona</a>
+        <a href="#barris">Barris e Sabores</a>
+        <a href="#orcamento">Pacotes</a>
+        <a href="#contato">Contato</a>
+      </nav>
+
+      <a class="header-whatsapp" href="https://wa.me/5565993307137" target="_blank" rel="noopener">
+        <span aria-hidden="true">☎</span>
+        Fale Conosco
+      </a>
+    </header>
+
+    <main>
+      <section class="hero" id="inicio">
+        <div class="hero-content">
+          <p class="eyebrow">Aluguel de chopeira com barril de chopp</p>
+          <h1>O melhor chopp <span>para sua festa!</span></h1>
+          <p>
+            Delivery com chopeira, barril, cilindro de CO2 e acessorios para eventos,
+            confraternizacoes e festas em Cuiaba e regiao.
+          </p>
+
+          <div class="hero-badges" aria-label="Diferenciais">
+            <span>Chopp gelado</span>
+            <span>Chopeira profissional</span>
+            <span>Entrega combinada</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="budget-section" id="orcamento">
+        <div class="section-heading">
+          <h2>Monte <span>seu orcamento</span></h2>
+          <p>Escolha as opcoes e envie o pedido completo direto pelo WhatsApp.</p>
+        </div>
+
+        <form class="budget-grid" id="budgetForm">
+          <div class="steps">
+            <fieldset class="panel">
+              <legend><span>1.</span> Escolha o tipo de servico</legend>
+              <div class="option-grid">
+                <label class="choice">
+                  <input type="radio" name="service" value="Apenas barril" data-price-extra="0" />
+                  <span class="check"></span>
+                  <span class="choice-icon" aria-hidden="true">▤</span>
+                  <strong>Apenas barril</strong>
+                  <small>Para quem ja tem chopeira e quer apenas o barril.</small>
+                </label>
+
+                <label class="choice">
+                  <input type="radio" name="service" value="Pacote completo" data-price-extra="0" checked />
+                  <span class="check"></span>
+                  <span class="choice-icon" aria-hidden="true">♨</span>
+                  <strong>Pacote completo</strong>
+                  <small>Chopp com chopeira, cilindro, acessorios e delivery.</small>
+                </label>
+              </div>
+            </fieldset>
+
+            <fieldset class="panel" id="barris">
+              <legend><span>2.</span> Escolha o tamanho do barril</legend>
+              <div class="option-grid">
+                <label class="choice">
+                  <input type="radio" name="keg" value="50L" data-cups="150" data-price="750" checked />
+                  <span class="check"></span>
+                  <span class="keg-icon" aria-hidden="true"></span>
+                  <strong>50L</strong>
+                  <small>Rende em media 166 copos de 300ml.</small>
+                  <em>R$ 750,00</em>
+                </label>
+
+                <label class="choice">
+                  <input type="radio" name="keg" value="30L" data-cups="90" data-price="0" />
+                  <span class="check"></span>
+                  <span class="keg-icon" aria-hidden="true"></span>
+                  <strong>30L</strong>
+                  <small>Rende em media 90 copos de 300ml.</small>
+                  <em>470</em>
+                </label>
+              </div>
+            </fieldset>
+
+            <fieldset class="panel compact-panel">
+              <legend><span>3.</span> Quantidade de barris</legend>
+              <div class="quantity-control">
+                <button type="button" id="decreaseQty" aria-label="Diminuir quantidade">−</button>
+                <input id="quantity" name="quantity" type="number" min="1" max="20" value="1" inputmode="numeric" />
+                <button type="button" id="increaseQty" aria-label="Aumentar quantidade">+</button>
+              </div>
+              <p class="notice">Vendemos barris de 50L e 30L. O pacote completo de 50L sai por R$ 750,00.</p>
+            </fieldset>
+
+            <fieldset class="panel compact-panel">
+              <legend><span>4.</span> Energia do local</legend>
+              <div class="segmented">
+                <label>
+                  <input type="radio" name="voltage" value="127V" checked />
+                  <span>127V</span>
+                </label>
+                <label>
+                  <input type="radio" name="voltage" value="220V" />
+                  <span>220V</span>
+                </label>
+              </div>
+            </fieldset>
+          </div>
+
+          <aside class="sidebar">
+            <section class="panel summary" aria-live="polite">
+              <h2>Resumo do seu orcamento</h2>
+              <dl>
+                <div>
+                  <dt>Tipo de servico</dt>
+                  <dd id="summaryService">Pacote completo</dd>
+                </div>
+                <div>
+                  <dt>Barril selecionado</dt>
+                  <dd id="summaryKeg">50L</dd>
+                </div>
+                <div>
+                  <dt>Quantidade</dt>
+                  <dd id="summaryQty">1 barril</dd>
+                </div>
+                <div>
+                  <dt>Energia</dt>
+                  <dd id="summaryVoltage">127V</dd>
+                </div>
+                <div>
+                  <dt>Total estimado</dt>
+                  <dd id="summaryTotal">R$ 750,00</dd>
+                </div>
+              </dl>
+            </section>
+
+            <section class="panel customer-panel">
+              <h2>5. Seus dados</h2>
+
+              <label>
+                Nome completo
+                <input id="name" name="name" type="text" placeholder="Digite seu nome completo" autocomplete="name" required />
+              </label>
+
+              <label>
+                CPF ou CNPJ
+                <input id="document" name="document" type="text" placeholder="CPF ou CNPJ" autocomplete="off" required />
+              </label>
+
+              <label>
+                WhatsApp
+                <input id="phone" name="phone" type="tel" placeholder="(65) 9 9999-9999" autocomplete="tel" required />
+              </label>
+
+              <label>
+                Endereco de entrega
+                <input id="address" name="address" type="text" placeholder="Rua, numero, bairro e cidade" autocomplete="street-address" required />
+              </label>
+
+              <div class="two-columns">
+                <label>
+                  Data da entrega
+                  <input id="date" name="date" type="date" required />
+                </label>
+
+                <label>
+                  Hora da entrega
+                  <input id="time" name="time" type="time" required />
+                </label>
+              </div>
+
+              <label>
+                Observacoes
+                <textarea id="notes" name="notes" rows="3" placeholder="Ex.: sabor desejado, ponto de referencia ou horario do evento"></textarea>
+              </label>
+
+              <button class="submit-button" type="submit">
+                Receber orcamento no WhatsApp
+              </button>
+
+              <p class="privacy">Seus dados serao usados apenas para montar o atendimento.</p>
+            </section>
+          </aside>
+        </form>
+      </section>
+
+      <section class="benefits" id="como-funciona">
+        <h2>Por que escolher a <span>Pantanal Chopp?</span></h2>
+        <div class="benefit-grid">
+          <article>
+            <strong>Chopp de qualidade</strong>
+            <p>Chopp gelado para deixar seu evento pronto para servir.</p>
+          </article>
+          <article>
+            <strong>Atendimento especializado</strong>
+            <p>Equipe pronta para orientar a quantidade ideal para sua festa.</p>
+          </article>
+          <article>
+            <strong>Equipamentos higienizados</strong>
+            <p>Chopeiras e acessorios sempre preparados para uso.</p>
+          </article>
+          <article>
+            <strong>Entrega e retirada</strong>
+            <p>Levamos o pacote completo com pontualidade combinada.</p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer" id="contato">
+      <a class="brand footer-brand" href="#inicio" aria-label="Pantanal Chopp">
+        <span>Pantanal</span>
+        <small>chopp</small>
+      </a>
+
+      <div>
+        <strong>Fale conosco</strong>
+        <a href="https://wa.me/5565993307137" target="_blank" rel="noopener">(65) 99330-7137</a>
+      </div>
+
+      <div>
+        <strong>Atendemos</strong>
+        <p>Cuiaba, Varzea Grande e regiao</p>
+      </div>
+
+      <div>
+        <strong>Atendimento</strong>
+        <p>24 horas pelo WhatsApp</p>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
