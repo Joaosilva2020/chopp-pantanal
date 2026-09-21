@@ -8,6 +8,13 @@ const addressInput = document.querySelector("#address");
 
 let currentLocation = null;
 
+const extraCupsInput =
+  document.querySelector("#extra-cups");
+
+const EXTRA_CUPS_PRICE = 20;
+const CUPS_PER_PACKAGE = 50;
+const MAX_EXTRA_CUPS_PACKAGES = 20;
+
 const form = document.querySelector("#budgetForm");
 const kegInputs = [...form.querySelectorAll("input[data-keg]")];
 const goToCustomerDataButton = document.querySelector("#goToCustomerData");
@@ -106,11 +113,27 @@ function getBudget() {
     0
   );
 
-  const total = items.reduce(
+  const extraCupsPackages = Math.min(
+    Math.max(
+      Number.parseInt(extraCupsInput.value, 10) || 0,
+      0
+    ),
+    MAX_EXTRA_CUPS_PACKAGES
+  );
+
+  const extraCupsQuantity =
+    extraCupsPackages * CUPS_PER_PACKAGE;
+
+  const extraCupsTotal =
+    extraCupsPackages * EXTRA_CUPS_PRICE;
+
+  const choppTotal = items.reduce(
     (sum, item) => sum + item.qty * item.price,
     0
   );
 
+  const total =
+    choppTotal + extraCupsTotal;
   const consignEligible =
     qty50 >= 1 || qty30 >= MIN_30L_FOR_CONSIGNADO;
 
@@ -127,16 +150,21 @@ function getBudget() {
     totalBarrels,
     totalLiters,
     totalCups,
+
+    extraCupsPackages,
+    extraCupsQuantity,
+    extraCupsTotal,
+
     total,
     voltage: voltage?.value || "",
     consignEligible,
     consignado,
     consignChoice: consignChoice
       ? {
-          size: consignChoice.dataset.size,
-          beer: consignChoice.dataset.beer,
-          short: consignChoice.dataset.short,
-        }
+        size: consignChoice.dataset.size,
+        beer: consignChoice.dataset.beer,
+        short: consignChoice.dataset.short,
+      }
       : null,
     isComplete: totalBarrels > 0,
   };
@@ -395,16 +423,30 @@ function buildWhatsAppMessage() {
       `*${item.qty} unidades - ${item.size} ${item.short}*`
   );
 
+  const cupsExtraLines =
+    budget.extraCupsPackages > 0
+      ? [
+        "*Copos extras:*",
+        `${budget.extraCupsPackages} ${budget.extraCupsPackages === 1
+          ? "pacote"
+          : "pacotes"
+        } de copo - ${budget.extraCupsQuantity} copos de 300 ml`,
+        `Total dos copos extras: ${moneyFormatter.format(
+          budget.extraCupsTotal
+        )}`,
+      ]
+      : [];
+
   const consignLine =
     budget.consignado &&
-    budget.consignChoice
+      budget.consignChoice
       ? `Consignado: ${budget.consignChoice.size}`
       : null;
 
   const locationLine =
-  currentLocation
-    ? `📍 *Iniciar rota:* https://www.google.com/maps/dir/?api=1&destination=${currentLocation.latitude},${currentLocation.longitude}&travelmode=driving`
-    : null;
+    currentLocation
+      ? `📍 *Iniciar rota:* https://www.google.com/maps/dir/?api=1&destination=${currentLocation.latitude},${currentLocation.longitude}&travelmode=driving`
+      : null;
 
   return [
     "Olá, Pantanal Chopp! Quero fazer um pedido",
@@ -426,12 +468,13 @@ function buildWhatsAppMessage() {
 
     `Total de litros: ${budget.totalLiters} litros`,
 
+    ...cupsExtraLines,
+
     consignLine,
 
     `Total: ${moneyFormatter.format(
       budget.total
     )}`,
-
     "",
 
     "*Dados do cliente*",
@@ -838,10 +881,8 @@ const heroDots =
 
       dot.setAttribute(
         "aria-label",
-        `Mostrar imagem ${
-          index + 1
-        } de ${
-          heroSlides.length
+        `Mostrar imagem ${index + 1
+        } de ${heroSlides.length
         }`
       );
 
@@ -983,9 +1024,9 @@ heroFigure.addEventListener(
     ) {
       showSlide(
         slideIndex +
-          (deltaX < 0
-            ? 1
-            : -1)
+        (deltaX < 0
+          ? 1
+          : -1)
       );
 
       startSlides();
@@ -1004,7 +1045,7 @@ const today = new Date();
 
 today.setMinutes(
   today.getMinutes() -
-    today.getTimezoneOffset()
+  today.getTimezoneOffset()
 );
 
 dateInput.min =

@@ -1661,3 +1661,95 @@ textarea {
     animation: none;
   }
 }
+/* ---------- Copos extras ---------- */
+
+.cups-panel {
+  display: grid;
+  gap: 12px;
+}
+
+.cups-panel .panel-hint {
+  margin-bottom: 0;
+}
+
+.cups-free {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: #faf7f2;
+}
+
+.cups-free div {
+  display: grid;
+  gap: 2px;
+}
+
+.cups-free strong {
+  font-weight: 800;
+}
+
+.cups-free span {
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.cups-free > strong {
+  color: var(--green);
+  white-space: nowrap;
+}
+
+.cups-extra-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 12px 0 0;
+  border-top: 1px solid var(--line);
+}
+
+.cups-extra-info {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.cups-extra-info strong {
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+
+.cups-extra-info span {
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+
+.cups-qty {
+  flex-shrink: 0;
+  width: 138px;
+  grid-template-columns: 44px minmax(0, 1fr) 44px;
+}
+
+.cups-qty button,
+.cups-qty input {
+  height: 48px;
+}
+
+.cups-qty button {
+  font-size: 1.4rem;
+}
+
+@media (max-width: 480px) {
+  .cups-extra-row {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .cups-qty {
+    width: 100%;
+  }
+}
