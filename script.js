@@ -401,10 +401,10 @@ function buildWhatsAppMessage() {
       ? `Consignado: ${budget.consignChoice.size}`
       : null;
 
-  const locationLine =
-    currentLocation
-      ? `📍 *Localização atual:* https://www.google.com/maps?q=${currentLocation.latitude},${currentLocation.longitude}`
-      : null;
+  cconst locationLine =
+  currentLocation
+    ? `📍 *Iniciar rota:* https://www.google.com/maps/dir/?api=1&destination=${currentLocation.latitude},${currentLocation.longitude}&travelmode=driving`
+    : null;
 
   return [
     "Olá, Pantanal Chopp! Quero fazer um pedido",
