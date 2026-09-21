@@ -417,7 +417,7 @@ document.addEventListener("keydown", (event) => {
 });
 
 // Carrossel do hero: troca a imagem a cada 5 segundos
-const SLIDE_INTERVAL = 5000;
+const SLIDE_INTERVAL = 2000;
 const heroFigure = document.querySelector("#heroFigure");
 const heroSlides = [...heroFigure.querySelectorAll(".hero-slide")];
 const heroDotsBox = document.querySelector("#heroDots");
