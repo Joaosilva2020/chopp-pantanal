@@ -401,7 +401,7 @@ function buildWhatsAppMessage() {
       ? `Consignado: ${budget.consignChoice.size}`
       : null;
 
-  cconst locationLine =
+  const locationLine =
   currentLocation
     ? `📍 *Iniciar rota:* https://www.google.com/maps/dir/?api=1&destination=${currentLocation.latitude},${currentLocation.longitude}&travelmode=driving`
     : null;
