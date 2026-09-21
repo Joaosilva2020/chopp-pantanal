@@ -448,6 +448,9 @@ function buildWhatsAppMessage() {
       ? `📍 *Iniciar rota:* https://www.google.com/maps/dir/?api=1&destination=${currentLocation.latitude},${currentLocation.longitude}&travelmode=driving`
       : null;
 
+  const payment =
+    data.get("payment") || "";
+
   return [
     "Olá, Pantanal Chopp! Quero fazer um pedido",
     "",
@@ -492,6 +495,10 @@ function buildWhatsAppMessage() {
     )}`,
 
     `Hora da entrega: ${data.get("time")}`,
+
+
+    `Forma de pagamento: ${payment}`,
+
 
     `Energia no local: ${budget.voltage}`,
 

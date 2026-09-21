@@ -225,64 +225,72 @@
             </fieldset>
 
             <!-- COPOS EXTRAS -->
-<fieldset class="panel cups-panel" id="cupsPanel">
-  <legend>Copos extras</legend>
+            <fieldset class="panel cups-panel" id="cupsPanel">
+              <legend>Copos extras</legend>
 
-  <p class="panel-hint">
-  
-  </p>
+              <p class="panel-hint">
 
-  <div class="cups-free">
-    <div>
-      <strong>1 pacote grátis</strong>
-      <span>50 copos de 300 ml</span>
-    </div>
+              </p>
 
-    <strong>Grátis</strong>
-  </div>
+              <div class="cups-free">
+                <div>
+                  <strong>1 pacote grátis</strong>
+                  <span>50 copos de 300 ml</span>
+                </div>
 
-  <div class="cups-extra-row">
-    <div class="cups-extra-info">
-      <strong>Pacotes extras</strong>
-      <span>50 copos de 300 ml · R$ 20,00 cada</span>
-    </div>
+                <strong>Grátis</strong>
+              </div>
 
-    <div
-      class="quantity-control cups-qty"
-      role="group"
-      aria-label="Quantidade de pacotes de copos extras"
-    >
-      <button
-        type="button"
-        data-target="extra-cups"
-        data-delta="-1"
-        aria-label="Diminuir pacotes de copos extras"
-      >
-        −
-      </button>
+              <div class="cups-extra-row">
+                <div class="cups-extra-info">
+                  <strong>Pacotes extras</strong>
+                  <span>50 copos de 300 ml · R$ 20,00 cada</span>
+                </div>
 
-      <input
-        id="extra-cups"
-        name="extra-cups"
-        type="number"
-        min="0"
-        max="20"
-        value="0"
-        inputmode="numeric"
-        aria-label="Quantidade de pacotes de copos extras"
-      />
+                <div class="quantity-control cups-qty" role="group" aria-label="Quantidade de pacotes de copos extras">
+                  <button type="button" data-target="extra-cups" data-delta="-1"
+                    aria-label="Diminuir pacotes de copos extras">
+                    −
+                  </button>
 
-      <button
-        type="button"
-        data-target="extra-cups"
-        data-delta="1"
-        aria-label="Aumentar pacotes de copos extras"
-      >
-        +
-      </button>
-    </div>
-  </div>
-</fieldset>
+                  <input id="extra-cups" name="extra-cups" type="number" min="0" max="20" value="0" inputmode="numeric"
+                    aria-label="Quantidade de pacotes de copos extras" />
+
+                  <button type="button" data-target="extra-cups" data-delta="1"
+                    aria-label="Aumentar pacotes de copos extras">
+                    +
+                  </button>
+                </div>
+              </div>
+            </fieldset>
+
+            <!-- FORMA DE PAGAMENTO -->
+            <fieldset class="panel payment-panel" id="paymentPanel">
+              <legend>Forma de pagamento</legend>
+
+              <div class="payment-options">
+                <label class="payment-option">
+                  <input type="radio" name="payment" value="Pix" required />
+                  <span>Pix</span>
+                </label>
+
+                <label class="payment-option">
+                  <input type="radio" name="payment" value="Cartão de débito" />
+                  <span>Cartão de débito</span>
+                </label>
+
+                <label class="payment-option">
+                  <input type="radio" name="payment" value="Cartão de crédito" />
+                  <span>Cartão de crédito</span>
+                </label>
+
+                <label class="payment-option">
+                  <input type="radio" name="payment" value="Dinheiro" />
+                  <span>Dinheiro</span>
+                </label>
+              </div>
+            </fieldset>
+
 
             <fieldset class="panel consign-panel is-locked" id="consignPanel">
               <legend>Consignado</legend>
@@ -323,7 +331,7 @@
               </div>
             </fieldset>
 
-            
+
 
 
 
