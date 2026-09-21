@@ -259,21 +259,7 @@ textarea {
   }
 }
 
-/* Ao rolar, o header deixa de estar sobre o preto: a arara some */
-@supports (animation-timeline: scroll()) {
-  .arara-perch {
-    animation: arara-leave linear both;
-    animation-timeline: scroll(root);
-    animation-range: 0 110px;
-  }
 
-  @keyframes arara-leave {
-    to {
-      opacity: 0;
-      visibility: hidden;
-    }
-  }
-}
 
 /* ---------- Hero ---------- */
 

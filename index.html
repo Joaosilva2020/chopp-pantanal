@@ -131,7 +131,6 @@
             <fieldset class="panel" id="barris">
               <legend>Escolha o chopp e os barris</legend>
               <p class="panel-hint">Misture à vontade: escolha mais de um chopp e quantos barris quiser de cada.
-                Rendimento estimado em copos de 300ml.</p>
 
               <div class="beer-list">
                 <div class="beer" role="group" aria-labelledby="beer-pilsen" style="--beer: #d98e04">
@@ -142,7 +141,6 @@
                   <div class="keg-row">
                     <div class="keg-info">
                       <strong>50L</strong>
-                      <small>Cerca de 166 copos</small>
                       <em>R$ 750,00</em>
                     </div>
                     <div class="quantity-control keg-qty" role="group"
@@ -160,7 +158,6 @@
                   <div class="keg-row">
                     <div class="keg-info">
                       <strong>30L</strong>
-                      <small>Cerca de 100 copos</small>
                       <em>R$ 480,00</em>
                     </div>
                     <div class="quantity-control keg-qty" role="group"
@@ -184,7 +181,6 @@
                   <div class="keg-row">
                     <div class="keg-info">
                       <strong>30L</strong>
-                      <small>Cerca de 100 copos</small>
                       <em>R$ 550,00</em>
                     </div>
                     <div class="quantity-control keg-qty" role="group"
@@ -208,7 +204,6 @@
                   <div class="keg-row">
                     <div class="keg-info">
                       <strong>30L</strong>
-                      <small>Cerca de 100 copos</small>
                       <em>R$ 550,00</em>
                     </div>
                     <div class="quantity-control keg-qty" role="group"
@@ -234,8 +229,7 @@
               <p class="panel-hint">Consignado é um barril extra: você só paga por se usar.</p>
 
               <div class="consign-warning" role="note">
-                <strong>Atenção</strong>
-                <p>Ao contratar o consignado e optar por não utilizá-lo, o prazo de recolha é de 1 dia útil.</p>
+
               </div>
 
               <label class="consign-toggle">
@@ -302,6 +296,12 @@
                   autocomplete="street-address" required />
               </label>
 
+              <button type="button" id="getLocationButton">
+                📍 Usar minha localização atual
+              </button>
+
+              <p id="locationStatus"></p>
+
               <div class="two-columns">
                 <label>
                   Data da entrega
@@ -353,11 +353,10 @@
                 <dd id="summaryKeg">-</dd>
               </div>
               <div>
-                <dt>Volume total</dt>
+                <dt>total</dt>
                 <dd id="summaryLiters">-</dd>
               </div>
               <div>
-                <dt>Rendimento em copos de 300ml</dt>
                 <dd id="summaryCups">-</dd>
               </div>
               <div>
