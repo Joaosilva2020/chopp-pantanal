@@ -457,605 +457,605 @@ function buildWhatsAppMessage() {
 
     "*Pedido*",
 
-    `Barril: ${kegLine}`,
+    `*Barril: ${kegLine}*`,
 
-    `Quantidade: ${plural(
+    `*Quantidade: ${plural(
       budget.totalBarrels,
       "barril",
       "barris"
-    )}`,
+    )}*`,
 
     "*Chopp escolhido:*",
 
     ...itemLines,
 
-    `Total de litros: ${budget.totalLiters} litros`,
+    `*Total de litros: ${budget.totalLiters} litros*`,
 
     ...cupsExtraLines,
 
-    consignLine,
+    consignLine
+      ? `*${consignLine}*`
+      : null,
 
-    `Total: ${moneyFormatter.format(
+    `*Total: ${moneyFormatter.format(
       budget.total
-    )}`,
+    )}*`,
+
     "",
 
     "*Dados do cliente*",
 
-    `Nome: ${data.get("name")}`,
+    `*Nome: ${data.get("name")}*`,
 
-    `CPF/CNPJ: ${data.get("document")}`,
+    `*CPF/CNPJ: ${data.get("document")}*`,
 
-    `WhatsApp: ${data.get("phone")}`,
+    `*WhatsApp: ${data.get("phone")}*`,
 
-    `Endereço: ${data.get("address")}`,
+    `*Endereço: ${data.get("address")}*`,
 
-    `Data da entrega: ${formatDateForMessage(
+    `*Data da entrega: ${formatDateForMessage(
       data.get("date")
-    )}`,
+    )}*`,
 
-    `Hora da entrega: ${data.get("time")}`,
+    `*Hora da entrega: ${data.get("time")}*`,
 
+    `*Energia no local: ${budget.voltage}*`,
 
-    `Forma de pagamento: ${payment}`,
-
-
-    `Energia no local: ${budget.voltage}`,
+    `*Forma de pagamento: ${data.get("payment")}*`,
 
     locationLine,
 
     notes
-      ? `Observações: ${notes}`
+      ? `*Observações: ${notes}*`
       : null,
   ]
     .filter((line) => line !== null)
     .join("\n");
-}
 
 
-/* =====================================================
-   LOCALIZAÇÃO ATUAL
-===================================================== */
+  /* =====================================================
+     LOCALIZAÇÃO ATUAL
+  ===================================================== */
 
-getLocationButton.addEventListener(
-  "click",
-  () => {
-    if (!navigator.geolocation) {
+  getLocationButton.addEventListener(
+    "click",
+    () => {
+      if (!navigator.geolocation) {
+        locationStatus.textContent =
+          "Seu navegador não suporta localização.";
+
+        return;
+      }
+
       locationStatus.textContent =
-        "Seu navegador não suporta localização.";
+        "Obtendo sua localização...";
 
-      return;
-    }
+      getLocationButton.disabled = true;
 
-    locationStatus.textContent =
-      "Obtendo sua localização...";
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const latitude =
+            position.coords.latitude;
 
-    getLocationButton.disabled = true;
+          const longitude =
+            position.coords.longitude;
 
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        const latitude =
-          position.coords.latitude;
+          currentLocation = {
+            latitude,
+            longitude,
+          };
 
-        const longitude =
-          position.coords.longitude;
+          /*
+            Tenta transformar latitude/longitude
+            em endereço.
+          */
 
-        currentLocation = {
-          latitude,
-          longitude,
-        };
-
-        /*
-          Tenta transformar latitude/longitude
-          em endereço.
-        */
-
-        try {
-          const response = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}&accept-language=pt-BR`
-          );
-
-          if (!response.ok) {
-            throw new Error(
-              "Não foi possível buscar o endereço."
+          try {
+            const response = await fetch(
+              `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}&accept-language=pt-BR`
             );
-          }
 
-          const result =
-            await response.json();
+            if (!response.ok) {
+              throw new Error(
+                "Não foi possível buscar o endereço."
+              );
+            }
 
-          if (result.display_name) {
-            addressInput.value =
-              result.display_name;
-          } else {
+            const result =
+              await response.json();
+
+            if (result.display_name) {
+              addressInput.value =
+                result.display_name;
+            } else {
+              addressInput.value =
+                `Latitude: ${latitude}, Longitude: ${longitude}`;
+            }
+          } catch (error) {
             addressInput.value =
               `Latitude: ${latitude}, Longitude: ${longitude}`;
           }
-        } catch (error) {
-          addressInput.value =
-            `Latitude: ${latitude}, Longitude: ${longitude}`;
+
+          locationStatus.textContent =
+            "✓ Endereço e localização obtidos com sucesso!";
+
+          getLocationButton.disabled = false;
+        },
+
+        () => {
+          locationStatus.textContent =
+            "Não foi possível obter sua localização. Permita o acesso no navegador.";
+
+          getLocationButton.disabled = false;
+        },
+
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 0,
         }
+      );
+    }
+  );
 
-        locationStatus.textContent =
-          "✓ Endereço e localização obtidos com sucesso!";
 
-        getLocationButton.disabled = false;
-      },
+  /* =====================================================
+     BOTÕES
+  ===================================================== */
 
+  form.addEventListener(
+    "click",
+    (event) => {
+      const button =
+        event.target.closest(
+          "button[data-target]"
+        );
+
+      if (!button) return;
+
+      changeQuantity(
+        document.getElementById(
+          button.dataset.target
+        ),
+        Number(button.dataset.delta)
+      );
+    }
+  );
+
+
+  /* =====================================================
+     QUANTIDADES
+  ===================================================== */
+
+  kegInputs.forEach((input) => {
+    input.addEventListener(
+      "change",
       () => {
-        locationStatus.textContent =
-          "Não foi possível obter sua localização. Permita o acesso no navegador.";
+        input.value =
+          readQuantity(input);
 
-        getLocationButton.disabled = false;
-      },
-
-      {
-        enableHighAccuracy: true,
-        timeout: 10000,
-        maximumAge: 0,
+        updateSummary();
       }
     );
+  });
+
+
+  /* =====================================================
+     ETAPAS
+  ===================================================== */
+
+  goToCustomerDataButton.addEventListener(
+    "click",
+    tryGoToStepTwo
+  );
+
+  backToBudgetButton.addEventListener(
+    "click",
+    () => setStep(1)
+  );
+
+  function tryGoToStepTwo() {
+    updateSummary();
+
+    const problemPanel =
+      validateBudgetStep();
+
+    if (!problemPanel) {
+      setStep(2);
+      return;
+    }
+
+    problemPanel.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+    });
   }
-);
 
 
-/* =====================================================
-   BOTÕES
-===================================================== */
+  /* =====================================================
+     BARRA FIXA
+  ===================================================== */
 
-form.addEventListener(
-  "click",
-  (event) => {
-    const button =
-      event.target.closest(
-        "button[data-target]"
-      );
-
-    if (!button) return;
-
-    changeQuantity(
-      document.getElementById(
-        button.dataset.target
-      ),
-      Number(button.dataset.delta)
-    );
-  }
-);
-
-
-/* =====================================================
-   QUANTIDADES
-===================================================== */
-
-kegInputs.forEach((input) => {
-  input.addEventListener(
-    "change",
+  barAction.addEventListener(
+    "click",
     () => {
-      input.value =
-        readQuantity(input);
+      if (currentStep() === "1") {
+        tryGoToStepTwo();
+      } else {
+        submitButton.click();
+      }
+    }
+  );
 
+
+  /* =====================================================
+     CPF / CNPJ
+  ===================================================== */
+
+  documentInput.addEventListener(
+    "input",
+    () => {
+      documentInput.value =
+        formatCpfCnpj(
+          documentInput.value
+        );
+
+      validateCustomerFields();
+    }
+  );
+
+
+  /* =====================================================
+     TELEFONE
+  ===================================================== */
+
+  phoneInput.addEventListener(
+    "input",
+    () => {
+      phoneInput.value =
+        formatPhone(
+          phoneInput.value
+        );
+    }
+  );
+
+
+  /* =====================================================
+     ATUALIZAÇÃO DO FORMULÁRIO
+  ===================================================== */
+
+  form.addEventListener(
+    "input",
+    () => {
+      setBudgetError("");
+      setConsignError("");
       updateSummary();
     }
   );
-});
 
-
-/* =====================================================
-   ETAPAS
-===================================================== */
-
-goToCustomerDataButton.addEventListener(
-  "click",
-  tryGoToStepTwo
-);
-
-backToBudgetButton.addEventListener(
-  "click",
-  () => setStep(1)
-);
-
-function tryGoToStepTwo() {
-  updateSummary();
-
-  const problemPanel =
-    validateBudgetStep();
-
-  if (!problemPanel) {
-    setStep(2);
-    return;
-  }
-
-  problemPanel.scrollIntoView({
-    behavior: "smooth",
-    block: "center",
-  });
-}
-
-
-/* =====================================================
-   BARRA FIXA
-===================================================== */
-
-barAction.addEventListener(
-  "click",
-  () => {
-    if (currentStep() === "1") {
-      tryGoToStepTwo();
-    } else {
-      submitButton.click();
+  form.addEventListener(
+    "change",
+    () => {
+      setBudgetError("");
+      setConsignError("");
+      updateSummary();
     }
-  }
-);
+  );
 
 
-/* =====================================================
-   CPF / CNPJ
-===================================================== */
+  /* =====================================================
+     ENVIO PARA WHATSAPP
+  ===================================================== */
 
-documentInput.addEventListener(
-  "input",
-  () => {
-    documentInput.value =
-      formatCpfCnpj(
-        documentInput.value
-      );
+  form.addEventListener(
+    "submit",
+    (event) => {
+      event.preventDefault();
 
-    validateCustomerFields();
-  }
-);
+      validateCustomerFields();
 
-
-/* =====================================================
-   TELEFONE
-===================================================== */
-
-phoneInput.addEventListener(
-  "input",
-  () => {
-    phoneInput.value =
-      formatPhone(
-        phoneInput.value
-      );
-  }
-);
-
-
-/* =====================================================
-   ATUALIZAÇÃO DO FORMULÁRIO
-===================================================== */
-
-form.addEventListener(
-  "input",
-  () => {
-    setBudgetError("");
-    setConsignError("");
-    updateSummary();
-  }
-);
-
-form.addEventListener(
-  "change",
-  () => {
-    setBudgetError("");
-    setConsignError("");
-    updateSummary();
-  }
-);
-
-
-/* =====================================================
-   ENVIO PARA WHATSAPP
-===================================================== */
-
-form.addEventListener(
-  "submit",
-  (event) => {
-    event.preventDefault();
-
-    validateCustomerFields();
-
-    if (validateBudgetStep()) {
-      setStep(1);
-      return;
-    }
-
-    if (!form.checkValidity()) {
-      if (currentStep() !== "2") {
-        setStep(2);
+      if (validateBudgetStep()) {
+        setStep(1);
+        return;
       }
 
-      form.reportValidity();
+      if (!form.checkValidity()) {
+        if (currentStep() !== "2") {
+          setStep(2);
+        }
 
-      return;
-    }
+        form.reportValidity();
 
-    const url =
-      `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
-        buildWhatsAppMessage()
-      )}`;
+        return;
+      }
 
-    const popup =
-      window.open(
-        url,
-        "_blank"
-      );
+      const url =
+        `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+          buildWhatsAppMessage()
+        )}`;
 
-    if (popup) {
-      popup.opener = null;
-    } else {
-      window.location.href = url;
-    }
-  }
-);
-
-
-/* =====================================================
-   MENU DO CELULAR
-===================================================== */
-
-function setMenu(open) {
-  mainNav.classList.toggle(
-    "is-open",
-    open
-  );
-
-  menuToggle.setAttribute(
-    "aria-expanded",
-    String(open)
-  );
-
-  menuToggle.setAttribute(
-    "aria-label",
-    open
-      ? "Fechar menu"
-      : "Abrir menu"
-  );
-}
-
-menuToggle.addEventListener(
-  "click",
-  () => {
-    setMenu(
-      !mainNav.classList.contains(
-        "is-open"
-      )
-    );
-  }
-);
-
-mainNav.addEventListener(
-  "click",
-  (event) => {
-    if (
-      event.target.closest("a")
-    ) {
-      setMenu(false);
-    }
-  }
-);
-
-document.addEventListener(
-  "keydown",
-  (event) => {
-    if (event.key === "Escape") {
-      setMenu(false);
-    }
-  }
-);
-
-
-/* =====================================================
-   CARROSSEL
-===================================================== */
-
-const SLIDE_INTERVAL = 2000;
-
-const heroFigure =
-  document.querySelector(
-    "#heroFigure"
-  );
-
-const heroSlides = [
-  ...heroFigure.querySelectorAll(
-    ".hero-slide"
-  ),
-];
-
-const heroDotsBox =
-  document.querySelector(
-    "#heroDots"
-  );
-
-const reduceMotion =
-  window.matchMedia(
-    "(prefers-reduced-motion: reduce)"
-  );
-
-let slideIndex = 0;
-let slideTimer = null;
-
-const heroDots =
-  heroSlides.map(
-    (_, index) => {
-      const dot =
-        document.createElement(
-          "button"
+      const popup =
+        window.open(
+          url,
+          "_blank"
         );
 
-      dot.type = "button";
-      dot.className =
-        "hero-dot";
-
-      dot.setAttribute(
-        "aria-label",
-        `Mostrar imagem ${index + 1
-        } de ${heroSlides.length
-        }`
-      );
-
-      dot.addEventListener(
-        "click",
-        () => {
-          showSlide(index);
-          startSlides();
-        }
-      );
-
-      heroDotsBox.appendChild(
-        dot
-      );
-
-      return dot;
+      if (popup) {
+        popup.opener = null;
+      } else {
+        window.location.href = url;
+      }
     }
   );
 
-function showSlide(index) {
-  slideIndex =
-    (index +
-      heroSlides.length) %
-    heroSlides.length;
 
-  heroSlides.forEach(
-    (slide, i) => {
-      slide.classList.toggle(
-        "is-active",
-        i === slideIndex
-      );
+  /* =====================================================
+     MENU DO CELULAR
+  ===================================================== */
 
-      slide.setAttribute(
-        "aria-hidden",
-        String(
-          i !== slideIndex
-        )
-      );
-    }
-  );
-
-  heroDots.forEach(
-    (dot, i) => {
-      dot.setAttribute(
-        "aria-current",
-        String(
-          i === slideIndex
-        )
-      );
-    }
-  );
-}
-
-function stopSlides() {
-  clearInterval(
-    slideTimer
-  );
-
-  slideTimer = null;
-}
-
-function startSlides() {
-  stopSlides();
-
-  if (
-    reduceMotion.matches ||
-    heroSlides.length < 2
-  ) {
-    return;
-  }
-
-  slideTimer =
-    setInterval(
-      () =>
-        showSlide(
-          slideIndex + 1
-        ),
-      SLIDE_INTERVAL
+  function setMenu(open) {
+    mainNav.classList.toggle(
+      "is-open",
+      open
     );
-}
 
-heroFigure.addEventListener(
-  "mouseenter",
-  stopSlides
-);
+    menuToggle.setAttribute(
+      "aria-expanded",
+      String(open)
+    );
 
-heroFigure.addEventListener(
-  "mouseleave",
-  startSlides
-);
+    menuToggle.setAttribute(
+      "aria-label",
+      open
+        ? "Fechar menu"
+        : "Abrir menu"
+    );
+  }
 
-document.addEventListener(
-  "visibilitychange",
-  () => {
-    if (document.hidden) {
-      stopSlides();
-    } else {
-      startSlides();
+  menuToggle.addEventListener(
+    "click",
+    () => {
+      setMenu(
+        !mainNav.classList.contains(
+          "is-open"
+        )
+      );
     }
+  );
+
+  mainNav.addEventListener(
+    "click",
+    (event) => {
+      if (
+        event.target.closest("a")
+      ) {
+        setMenu(false);
+      }
+    }
+  );
+
+  document.addEventListener(
+    "keydown",
+    (event) => {
+      if (event.key === "Escape") {
+        setMenu(false);
+      }
+    }
+  );
+
+
+  /* =====================================================
+     CARROSSEL
+  ===================================================== */
+
+  const SLIDE_INTERVAL = 2000;
+
+  const heroFigure =
+    document.querySelector(
+      "#heroFigure"
+    );
+
+  const heroSlides = [
+    ...heroFigure.querySelectorAll(
+      ".hero-slide"
+    ),
+  ];
+
+  const heroDotsBox =
+    document.querySelector(
+      "#heroDots"
+    );
+
+  const reduceMotion =
+    window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    );
+
+  let slideIndex = 0;
+  let slideTimer = null;
+
+  const heroDots =
+    heroSlides.map(
+      (_, index) => {
+        const dot =
+          document.createElement(
+            "button"
+          );
+
+        dot.type = "button";
+        dot.className =
+          "hero-dot";
+
+        dot.setAttribute(
+          "aria-label",
+          `Mostrar imagem ${index + 1
+          } de ${heroSlides.length
+          }`
+        );
+
+        dot.addEventListener(
+          "click",
+          () => {
+            showSlide(index);
+            startSlides();
+          }
+        );
+
+        heroDotsBox.appendChild(
+          dot
+        );
+
+        return dot;
+      }
+    );
+
+  function showSlide(index) {
+    slideIndex =
+      (index +
+        heroSlides.length) %
+      heroSlides.length;
+
+    heroSlides.forEach(
+      (slide, i) => {
+        slide.classList.toggle(
+          "is-active",
+          i === slideIndex
+        );
+
+        slide.setAttribute(
+          "aria-hidden",
+          String(
+            i !== slideIndex
+          )
+        );
+      }
+    );
+
+    heroDots.forEach(
+      (dot, i) => {
+        dot.setAttribute(
+          "aria-current",
+          String(
+            i === slideIndex
+          )
+        );
+      }
+    );
   }
-);
 
+  function stopSlides() {
+    clearInterval(
+      slideTimer
+    );
 
-/* =====================================================
-   DESLIZAR NO CELULAR
-===================================================== */
-
-let touchStartX = null;
-
-heroFigure.addEventListener(
-  "touchstart",
-  (event) => {
-    touchStartX =
-      event.touches[0].clientX;
-  },
-  {
-    passive: true,
+    slideTimer = null;
   }
-);
 
-heroFigure.addEventListener(
-  "touchend",
-  (event) => {
+  function startSlides() {
+    stopSlides();
+
     if (
-      touchStartX === null
+      reduceMotion.matches ||
+      heroSlides.length < 2
     ) {
       return;
     }
 
-    const deltaX =
-      event.changedTouches[0]
-        .clientX -
-      touchStartX;
-
-    touchStartX = null;
-
-    if (
-      Math.abs(deltaX) > 40
-    ) {
-      showSlide(
-        slideIndex +
-        (deltaX < 0
-          ? 1
-          : -1)
+    slideTimer =
+      setInterval(
+        () =>
+          showSlide(
+            slideIndex + 1
+          ),
+        SLIDE_INTERVAL
       );
-
-      startSlides();
-    }
   }
-);
+
+  heroFigure.addEventListener(
+    "mouseenter",
+    stopSlides
+  );
+
+  heroFigure.addEventListener(
+    "mouseleave",
+    startSlides
+  );
+
+  document.addEventListener(
+    "visibilitychange",
+    () => {
+      if (document.hidden) {
+        stopSlides();
+      } else {
+        startSlides();
+      }
+    }
+  );
+
+
+  /* =====================================================
+     DESLIZAR NO CELULAR
+  ===================================================== */
+
+  let touchStartX = null;
+
+  heroFigure.addEventListener(
+    "touchstart",
+    (event) => {
+      touchStartX =
+        event.touches[0].clientX;
+    },
+    {
+      passive: true,
+    }
+  );
+
+  heroFigure.addEventListener(
+    "touchend",
+    (event) => {
+      if (
+        touchStartX === null
+      ) {
+        return;
+      }
+
+      const deltaX =
+        event.changedTouches[0]
+          .clientX -
+        touchStartX;
+
+      touchStartX = null;
+
+      if (
+        Math.abs(deltaX) > 40
+      ) {
+        showSlide(
+          slideIndex +
+          (deltaX < 0
+            ? 1
+            : -1)
+        );
+
+        startSlides();
+      }
+    }
+  );
 
 
 
 
 
-showSlide(0);
-startSlides();
+  showSlide(0);
+  startSlides();
 
-const today = new Date();
+  const today = new Date();
 
-today.setMinutes(
-  today.getMinutes() -
-  today.getTimezoneOffset()
-);
+  today.setMinutes(
+    today.getMinutes() -
+    today.getTimezoneOffset()
+  );
 
-dateInput.min =
-  today.toISOString().slice(0, 10);
+  dateInput.min =
+    today.toISOString().slice(0, 10);
 
-updateSummary();
+  updateSummary();
