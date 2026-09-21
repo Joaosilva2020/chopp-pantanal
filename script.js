@@ -289,11 +289,6 @@ function updateSummary() {
       ? `${budget.totalLiters} litros`
       : "-";
 
-  summaryCups.textContent =
-    budget.isComplete
-      ? `≈ ${budget.totalCups} copos`
-      : "-";
-
   summaryConsign.textContent =
     budget.consignado
       ? budget.consignChoice
