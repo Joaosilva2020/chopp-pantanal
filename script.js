@@ -511,7 +511,7 @@ function buildWhatsAppMessage() {
   ]
     .filter((line) => line !== null)
     .join("\n");
-
+}
 
   /* =====================================================
      LOCALIZAÇÃO ATUAL
