@@ -455,43 +455,52 @@ function buildWhatsAppMessage() {
     "Olá, Pantanal Chopp! Quero fazer um pedido",
     "",
 
-    "*Pedido*",
+    " *Pedido*",
+
 
     `*Barril: ${kegLine}*`,
 
-    `*Quantidade: ${plural(
+    `* Quantidade: ${plural(
       budget.totalBarrels,
-      "barril",
-      "barris"
+      " barril",
+      "barris " 
     )}*`,
 
-    "*Chopp escolhido:*",
+
+    " *Chopp escolhido:*",
+
 
     ...itemLines,
 
-    `*Total de litros: ${budget.totalLiters} litros*`,
+    `* Total de litros: ${budget.totalLiters} litros*`,
+
 
     ...cupsExtraLines,
+
 
     consignLine
       ? `*${consignLine}*`
       : null,
 
+
     `*Total: ${moneyFormatter.format(
       budget.total
     )}*`,
 
+
     "",
+
 
     "*Dados do cliente*",
 
-    `*Nome: ${data.get("name")}*`,
+    `*Nome:  ${data.get("name")}*`,
 
-    `*CPF/CNPJ: ${data.get("document")}*`,
 
-    `*WhatsApp: ${data.get("phone")}*`,
+    `*CPF/CNPJ:  ${data.get("document")}*`,
 
-    `*Endereço: ${data.get("address")}*`,
+    `*WhatsApp:  ${data.get("phone")}*`,
+
+    `*Endereço:  ${data.get("address")}*`,
 
     `*Data da entrega: ${formatDateForMessage(
       data.get("date")

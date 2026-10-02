@@ -394,63 +394,59 @@ textarea {
   font-weight: 600;
 }
 
-/* ---------- Diferenciais ---------- */
+/* ---------- Slogan camaleão ---------- */
 
-.perks {
-  padding: 22px 20px 30px;
-  color: var(--ink);
-  background: var(--amber);
-}
-
-.perks-inner {
+.tagline {
   display: grid;
-  gap: 20px;
-  width: min(1100px, 100%);
-  margin: 0 auto;
+  place-items: center;
+  padding: 56px 20px;
+  background: var(--night);
+  text-align: center;
 }
 
-.perks h2 {
+.tagline-text {
+  display: grid;
+  gap: 6px;
   margin: 0;
+  font-family: var(--display);
+  font-weight: 800;
+  line-height: 0.95;
+  text-transform: uppercase;
   text-wrap: balance;
-  font-family: var(--display);
-  font-size: 2.1rem;
-  font-weight: 800;
-  line-height: 1;
-  text-transform: uppercase;
+  animation: chameleon 9s ease-in-out infinite;
 }
 
-.perks-lead p {
-  margin: 10px 0 0;
-  max-width: 46ch;
-  color: rgba(20, 18, 18, 0.85);
+.tagline-brand {
+  font-size: clamp(2.8rem, 12vw, 6rem);
+  letter-spacing: 0.01em;
 }
 
-.perks-list {
-  display: grid;
-  margin: 0;
-  padding: 0;
-  list-style: none;
+.tagline-sub {
+  font-size: clamp(1.4rem, 6vw, 3rem);
+  letter-spacing: 0.14em;
 }
 
-.perks-list li {
-  padding: 14px 0;
-  border-top: 2px solid var(--ink);
+@keyframes chameleon {
+  0%,
+  100% {
+    color: var(--amber);
+    text-shadow: 0 0 28px rgba(242, 163, 15, 0.45);
+  }
+  33% {
+    color: #e5232f;
+    text-shadow: 0 0 28px rgba(229, 35, 47, 0.45);
+  }
+  66% {
+    color: #1fd14f;
+    text-shadow: 0 0 28px rgba(31, 209, 79, 0.45);
+  }
 }
 
-.perks-list strong {
-  display: block;
-  font-family: var(--display);
-  font-size: 1.8rem;
-  font-weight: 800;
-  line-height: 1;
-  text-transform: uppercase;
-}
-
-.perks-list span {
-  display: block;
-  margin-top: 6px;
-  color: rgba(20, 18, 18, 0.85);
-  font-size: 0.95rem;
+@media (prefers-reduced-motion: reduce) {
+  .tagline-text {
+    animation: none;
+    color: var(--amber);
+  }
 }
 
 /* ---------- Orçamento ---------- */
@@ -1519,31 +1515,6 @@ textarea {
   .hero p {
     max-width: 470px;
     font-size: 1.1rem;
-  }
-
-  .perks {
-    padding: 44px var(--pad);
-  }
-
-  .perks-inner {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.7fr);
-    align-items: center;
-    gap: 56px;
-  }
-
-  .perks h2 {
-    font-size: 2.6rem;
-  }
-
-  .perks-list {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 24px;
-  }
-
-  .perks-list li {
-    padding: 2px 0 2px 18px;
-    border-top: 0;
-    border-left: 2px solid var(--ink);
   }
 
   .budget-section {
