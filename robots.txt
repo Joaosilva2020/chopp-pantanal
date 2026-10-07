@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://barrildourado.com.br/sitemap.xml
+Sitemap: https://www.barrildourado.com.br/sitemap.xml
